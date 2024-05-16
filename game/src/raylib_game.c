@@ -57,6 +57,8 @@ static void UpdateDrawFrame(void);          // Update and draw one frame
 //----------------------------------------------------------------------------------
 int main(void)
 {
+    SetConfigFlags(FLAG_MSAA_4X_HINT);      // Enable Multi Sampling Anti Aliasing 4x (if available)
+
     // Initialization
     //---------------------------------------------------------
     InitWindow(screenWidth, screenHeight, "raylib game template");

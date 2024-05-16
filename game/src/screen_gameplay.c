@@ -26,11 +26,20 @@
 #include "raylib.h"
 #include "screens.h"
 
+typedef struct BadGuy
+{
+    float x;
+    float y;
+    float radius;
+    Color color;
+} BadGuy;
+
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
 static int framesCounter = 0;
 static int finishScreen = 0;
+BadGuy badguy;
 
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
@@ -43,12 +52,24 @@ void InitGameplayScreen(void)
     framesCounter = 0;
     finishScreen = 0;
 
-    DisableCursor();
+    badguy.x = 100.f;
+    badguy.y = 100.f;
+    badguy.radius = 12.f;
+    badguy.color = BLACK;
+
+    HideCursor();
 }
 
 // Gameplay Screen Update logic
 void UpdateGameplayScreen(void)
 {
+    Vector2 badguyPositon = { .x = badguy.x, .y = badguy.y };
+    Vector2 heroPosition = { .x = GetMouseX(), .y = GetMouseY() };
+    bool didCollide =  CheckCollisionCircles(heroPosition, 24.f, badguyPositon, badguy.radius);
+    if (didCollide) 
+    {
+        finishScreen = 1;
+    }
     // TODO: Update GAMEPLAY screen variables here!
 
     // Press enter or tap to change to ENDING screen
@@ -68,8 +89,8 @@ void DrawGameplayScreen(void)
     DrawTextEx(font, "GAMEPLAY SCREEN", pos, font.baseSize*3.0f, 4, MAROON);
     DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
 
-    DrawCircle(GetMouseX(), GetMouseY(), 48.0f, GREEN);
-
+    DrawCircle(GetMouseX(), GetMouseY(), 24.0f, GREEN);
+    DrawCircle(badguy.x, badguy.y, badguy.radius, badguy.color);
 }
 
 // Gameplay Screen Unload logic
