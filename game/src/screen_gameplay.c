@@ -26,20 +26,15 @@
 #include "raylib.h"
 #include "screens.h"
 
-typedef struct BadGuy
-{
-    float x;
-    float y;
-    float radius;
-    Color color;
-} BadGuy;
+#include "Circle.h"
 
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
 static int framesCounter = 0;
 static int finishScreen = 0;
-BadGuy badguy;
+struct Circle badGuy;
+struct Circle hero;
 
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
@@ -52,10 +47,12 @@ void InitGameplayScreen(void)
     framesCounter = 0;
     finishScreen = 0;
 
-    badguy.x = 100.f;
-    badguy.y = 100.f;
-    badguy.radius = 12.f;
-    badguy.color = BLACK;
+    badGuy.position.x = 100.f;
+    badGuy.position.y = 100.f;
+    badGuy.radius = 12.f;
+
+    hero.position = GetMousePosition();
+    hero.radius = 24.f;
 
     HideCursor();
 }
@@ -63,9 +60,19 @@ void InitGameplayScreen(void)
 // Gameplay Screen Update logic
 void UpdateGameplayScreen(void)
 {
-    Vector2 badguyPositon = { .x = badguy.x, .y = badguy.y };
-    Vector2 heroPosition = { .x = GetMouseX(), .y = GetMouseY() };
-    bool didCollide =  CheckCollisionCircles(heroPosition, 24.f, badguyPositon, badguy.radius);
+    hero = (struct Circle)
+    { 
+        .position = (Vector2)
+        {
+            .x = 100.f, 
+            .y = 100.f 
+        }, 
+
+        .radius = 24.f 
+    };
+
+    hero.position = GetMousePosition();
+    bool didCollide =  CheckCollisionCirclesC(&hero, &badGuy);
     if (didCollide) 
     {
         finishScreen = 1;
@@ -89,8 +96,8 @@ void DrawGameplayScreen(void)
     DrawTextEx(font, "GAMEPLAY SCREEN", pos, font.baseSize*3.0f, 4, MAROON);
     DrawText("PRESS ENTER or TAP to JUMP to ENDING SCREEN", 130, 220, 20, MAROON);
 
-    DrawCircle(GetMouseX(), GetMouseY(), 24.0f, GREEN);
-    DrawCircle(badguy.x, badguy.y, badguy.radius, badguy.color);
+    DrawCircleV(hero.position, hero.radius, GREEN);
+    DrawCircleV(badGuy.position, badGuy.radius, BLACK);
 }
 
 // Gameplay Screen Unload logic

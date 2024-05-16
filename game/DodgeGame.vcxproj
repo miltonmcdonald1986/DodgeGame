@@ -97,9 +97,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="src\screens.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Circle.c" />
     <ClCompile Include="src\raylib_game.c" />
     <ClCompile Include="src\screen_ending.c" />
     <ClCompile Include="src\screen_gameplay.c" />
